@@ -66,6 +66,14 @@ h2::after {
 }
 
 /* --- NAVIGATION --- */
+/* Hide the hamburger menu on PC */
+.menu-icon {
+    display: none;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    margin-right: 15px; /* Space between icon and logo */
+}
 .navbar {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
@@ -401,9 +409,19 @@ transform: scaleX(1);
     transition: var(--transition);
 }
 
-.social-icon:hover {
+/* 1. For Computers (Mouse Hover) */
+@media (hover: hover) {
+    .social-icon:hover {
+        background: var(--primary-color);
+        transform: scale(1.1);
+    }
+}
+
+/* 2. For Mobiles (Touch Click) */
+/* This makes it flash blue only while your finger is pressing it */
+.social-icon:active {
     background: var(--primary-color);
-    transform: scale(1.1);
+    transform: scale(0.95); /* Adds a nice little 'click' press effect */
 }
 
 .footer-text {
@@ -413,9 +431,90 @@ transform: scaleX(1);
 }
 
 /* Responsive Design */
+/* =========================================
+   MOBILE RESPONSIVENESS (Max-Width: 768px)
+   ========================================= */
 @media (max-width: 768px) {
-    .hero h1 { font-size: 2.5rem; }
-    .navbar .container { flex-direction: column; height: auto; padding: 15px; }
-    .nav-links { margin-top: 15px; gap: 15px; }
+
+    /* 1. Navbar Layout */
+    .navbar .container {
+        flex-direction: row;      
+        justify-content: flex-start; 
+        align-items: center;
+        padding: 15px 20px;
+        height: 70px;
+    }
+
+    /* 2. The Hamburger Icon */
+    .menu-icon {
+        display: block;
+        z-index: 1001; /* Ensure it stays on top */
+        transition: transform 0.4s ease; /* Smooth rotation */
+    }
+
+    /* ROTATE ANIMATION: When active, rotate 90 degrees */
+    .menu-icon.active i {
+        transform: rotate(90deg);
+        color: var(--primary-color);
+    }
+
+    /* 3. The Menu (Hidden State) */
+    .nav-links {
+        /* We use max-height instead of display:none to allow animation */
+        display: flex; 
+        flex-direction: column;
+        align-items: center;
+        
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: rgba(17, 24, 39, 0.98);
+        backdrop-filter: blur(10px);
+        padding: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+        
+        /* HIDE IT SMOOTHLY */
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden; /* Cut off content when closed */
+        transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Professional easing */
+    }
+
+    /* 4. The Menu (Active/Open State) */
+    .nav-links.active {
+        max-height: 500px; /* Expand down */
+        opacity: 1;        /* Fade in */
+        padding: 20px 0;   /* Add internal spacing */
+    }
+
+    .nav-links a {
+        color: var(--white); 
+        font-size: 1.1rem;
+        margin: 15px 0;
+        width: 100%;
+        text-align: center;
+        display: block;
+        
+        /* Optional: Links slide in slightly later */
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    /* Cascade effect: Links appear one by one when menu opens */
+    .nav-links.active a {
+        transform: translateY(0);
+        opacity: 1;
+        transition-delay: 0.2s; /* Wait for menu to drop first */
+    }
+
+    /* 5. Fix other sections */
+    .hero { padding-top: 100px; }
+    .hero h1 { font-size: 2.2rem; }
+    .floating-bg i { display: none; }
     .about-content { flex-direction: column; }
+    .about-content img { max-width: 250px; margin-bottom: 30px; }
+    section { padding: 50px 0; scroll-margin-top: 100px; }
 }
